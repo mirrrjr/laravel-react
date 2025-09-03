@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Post\CreateRequest;
+use App\Http\Requests\Post\UpdateRequest;
 use App\Models\Post;
-use Illuminate\Http\Request;
+use App\Services\PostService;
 use Inertia\Inertia;
 
 class PostController extends Controller
 {
+    public function __construct(
+        protected PostService $postService
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
@@ -30,17 +36,11 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CreateRequest $request)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|min:3|max:255',
-            'content' => 'required|string|min:3|max:10000',
-        ]);
+        $validated = $request->validated();
 
-        Post::create([
-            'title' => $validated['title'],
-            'content' => $validated['content'],
-        ]);
+        $this->postService->create($validated);
 
         return redirect()->route('posts.index');
     }
@@ -68,14 +68,13 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateRequest $request, string $id)
     {
-        $validated = $request->validate([
-            'title' => 'string|min:3|max:255',
-            'content' => 'string|min:3|max:1000',
-        ]);
+        $validated = $request->validated();
 
         $post = $this->findById($id);
+
+        $this->postService->update($post, $validated);
 
         $post->update([
             'title' => $validated['title'] ?? $post->title,

@@ -46,3 +46,11 @@ export interface Post extends Record<string, any> {
     title: string;
     content: string;
 }
+
+export interface User {
+    id: number;
+    name: string;
+    email: string;
+    email_verified_at: Date;
+    password: string;
+}
