@@ -2,8 +2,7 @@ import { type BreadcrumbItem, type SharedData } from '@/types';
 import { Form, Head, Link, usePage } from '@inertiajs/react';
 
 import AppLayout from '@/layouts/app-layout';
-import posts from '@/routes/posts';
-import PostController, { index } from '@/actions/App/Http/Controllers/PostController';
+import { index, store } from '@/actions/App/Http/Controllers/PostController';
 import { Label } from '@radix-ui/react-label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -34,10 +33,7 @@ export default function PostCreate() {
                     Back
                 </Link>
                 <Form
-                    {...PostController.store.form()}
-                    options={{
-                        preserveScroll: true,
-                    }}
+                    action={store()}
                     className="space-y-6"
                 >
                     <Label htmlFor="name">Title</Label>
